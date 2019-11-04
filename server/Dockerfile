@@ -27,7 +27,7 @@ ARG aws_secret_key
 RUN if [[ -n "$aws_access_key" ]]; \
     then \
         echo >>/opt/presto/etc/catalog/hive.properties; \
-        echo "hive.s3.aws-access-key=${aws_access_key}" >>//opt/presto/etc/catalog/hive.properties; \
+        echo "hive.s3.aws-access-key=${aws_access_key}" >>/opt/presto/etc/catalog/hive.properties; \
         echo "hive.s3.aws-secret-key=${aws_secret_key}" >>/opt/presto/etc/catalog/hive.properties; \
     fi
 
@@ -42,6 +42,21 @@ RUN if [[ $is_coordinator == 'true' ]]; \
         echo >>/opt/presto/etc/config.properties; \
         echo "discovery-server.enabled=true" >>/opt/presto/etc/config.properties; \
         echo "node-scheduler.include-coordinator=$is_worker" >>/opt/presto/etc/config.properties; \
+    fi
+
+ARG iceberg_dir
+RUN if [[ -z "$iceberg_dir" ]]; \
+    then \
+        rm /opt/presto/etc/catalog/iceberg.properties; \
+    else sed -i \
+        -e "s|%ICEBERG_DIR%|${iceberg_dir}|g"  \
+        /opt/presto/etc/catalog/iceberg.properties; \
+        if [[ -n "$aws_access_key" ]]; \
+        then \
+            echo >>/opt/presto/etc/catalog/iceberg.properties; \
+            echo "hive.s3.aws-access-key=${aws_access_key}" >>/opt/presto/etc/catalog/iceberg.properties; \
+            echo "hive.s3.aws-secret-key=${aws_secret_key}" >>/opt/presto/etc/catalog/iceberg.properties; \
+        fi; \
     fi
 
 CMD /opt/presto/bin/launcher start && sleep 30 && tail -f /data/presto/var/log/server.log

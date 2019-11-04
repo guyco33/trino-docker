@@ -36,6 +36,7 @@ services:
         - aws_secret_key=$AWS_SECRET_ACCESS_KEY
         - is_coordinator=true
         - is_worker=$COORDINATOR_IS_WORKER
+        - iceberg_dir=$ICEBERG_DIR
     image: presto-coordinator
     ports:
       - "8080:8080"
