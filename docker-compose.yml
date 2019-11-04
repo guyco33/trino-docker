@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+
+  hms-db:
+    image: "mysql:8.0.18"
+    ports:
+      - "3306:53306"
+    expose:
+      - "3306"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+  hms-thrift:
+    build:
+      context: hms-thrift
+      dockerfile: Dockerfile
+      args:
+        - aws_access_key=$AWS_ACCESS_KEY_ID
+        - aws_secret_key=$AWS_SECRET_ACCESS_KEY
+    image: hms-thrift:3.1.0
+    ports:
+      - "9083:9083"
+    depends_on:
+      - hms-db
+
+  coordinator:
+    build:
+      context: server
+      dockerfile: Dockerfile
+      args:
+        - presto_version=$PRESTO_VERSION
+        - aws_access_key=$AWS_ACCESS_KEY_ID
+        - aws_secret_key=$AWS_SECRET_ACCESS_KEY
+        - is_coordinator=true
+        - is_worker=$COORDINATOR_IS_WORKER
+    image: presto-coordinator
+    ports:
+      - "8080:8080"

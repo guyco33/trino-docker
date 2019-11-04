@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  worker:
+    build:
+      context: server
+      dockerfile: Dockerfile
+      args:
+        - presto_version=$PRESTO_VERSION
+        - aws_access_key=$AWS_ACCESS_KEY_ID
+        - aws_secret_key=$AWS_SECRET_ACCESS_KEY
+        - is_coordinator=false
+    image: presto-worker
