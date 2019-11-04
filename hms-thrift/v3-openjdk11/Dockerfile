@@ -7,8 +7,8 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-RUN yum -y install java-1.8.0-openjdk
-ENV JAVA_HOME /usr/lib/jvm/jre
+RUN yum -y -q install java-11-openjdk-devel
+ENV JAVA_HOME /usr/lib/jvm/java-11
 
 RUN rpm -Uvh https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm && yum -y -q install mysql
 
