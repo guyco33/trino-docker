@@ -15,6 +15,8 @@ RUN wget -c https://repo1.maven.org/maven2/io/prestosql/presto-server/$presto_ve
 
 RUN tar xvzf presto-server-$presto_version.tar.gz && mv presto-server-$presto_version /opt/presto
 
+RUN yum -q clean all && rm -rf /var/cache/yum && rm -rf /tmp/* /var/tmp/*
+
 RUN mkdir -p /data/presto
 
 EXPOSE 8080
