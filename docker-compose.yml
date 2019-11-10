@@ -17,14 +17,14 @@ services:
     build:
       context: hms-thrift
       dockerfile: Dockerfile
-      args:
-        - aws_access_key=$AWS_ACCESS_KEY_ID
-        - aws_secret_key=$AWS_SECRET_ACCESS_KEY
     image: hms-thrift:3.1.0
     ports:
       - "9083:9083"
     depends_on:
       - hms-db
+    environment:
+      AWS_ACCESS_KEY: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_KEY: $AWS_SECRET_ACCESS_KEY
 
   coordinator:
     build:
@@ -32,11 +32,12 @@ services:
       dockerfile: Dockerfile
       args:
         - presto_version=$PRESTO_VERSION
-        - aws_access_key=$AWS_ACCESS_KEY_ID
-        - aws_secret_key=$AWS_SECRET_ACCESS_KEY
-        - is_coordinator=true
-        - is_worker=$COORDINATOR_IS_WORKER
-        - iceberg_dir=$ICEBERG_DIR
-    image: presto-coordinator
+    image: presto-server
     ports:
       - "8080:8080"
+    environment:
+      IS_COORDINATOR: "true"
+      COORDINATOR_IS_WORKER: $COORDINATOR_IS_WORKER
+      AWS_ACCESS_KEY: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_KEY: $AWS_SECRET_ACCESS_KEY
+      ICEBERG_DIR: $ICEBERG_DIR

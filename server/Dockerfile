@@ -20,46 +20,12 @@ RUN mkdir -p /data/presto
 EXPOSE 8080
 
 COPY conf/default /opt/presto/.
+COPY conf/config.sh /opt/presto/.
+
 # TODO: mount /user/hive/warehouse/ to s3
 
-ARG aws_access_key
-ARG aws_secret_key
-RUN if [[ -n "$aws_access_key" ]]; \
-    then \
-        echo >>/opt/presto/etc/catalog/hive.properties; \
-        echo "hive.s3.aws-access-key=${aws_access_key}" >>/opt/presto/etc/catalog/hive.properties; \
-        echo "hive.s3.aws-secret-key=${aws_secret_key}" >>/opt/presto/etc/catalog/hive.properties; \
-    fi
+ENV AWS_ACCESS_KEY=""
+ENV AWS_SECRET_KEY=""
+ENV ICEBERG_DIR=""
 
-ARG is_worker
-ARG is_coordinator
-RUN sed -i \
-    -e "s|%COORDINATOR%|${is_coordinator}|g"  \
-    /opt/presto/etc/config.properties
-
-RUN echo >>/opt/presto/etc/config.properties; \
-    if [[ $is_coordinator == 'true' ]]; \
-    then \
-        echo "discovery.uri=http://localhost:8080" >>/opt/presto/etc/config.properties; \
-        echo "discovery-server.enabled=true" >>/opt/presto/etc/config.properties; \
-        echo "node-scheduler.include-coordinator=$is_worker" >>/opt/presto/etc/config.properties; \
-    else \
-        echo "discovery.uri=http://coordinator:8080" >>/opt/presto/etc/config.properties; \
-    fi
-
-ARG iceberg_dir
-RUN if [[ -z "$iceberg_dir" ]]; \
-    then \
-        rm /opt/presto/etc/catalog/iceberg.properties; \
-    else sed -i \
-        -e "s|%ICEBERG_DIR%|${iceberg_dir}|g"  \
-        /opt/presto/etc/catalog/iceberg.properties; \
-        if [[ -n "$aws_access_key" ]]; \
-        then \
-            echo >>/opt/presto/etc/catalog/iceberg.properties; \
-            echo "hive.s3.aws-access-key=${aws_access_key}" >>/opt/presto/etc/catalog/iceberg.properties; \
-            echo "hive.s3.aws-secret-key=${aws_secret_key}" >>/opt/presto/etc/catalog/iceberg.properties; \
-        fi; \
-    fi
-
-CMD /opt/presto/bin/launcher start && sleep 30 && tail -f /data/presto/var/log/launcher.log
+CMD /opt/presto/config.sh && /opt/presto/bin/launcher start && sleep 30 && tail -f /data/presto/var/log/launcher.log

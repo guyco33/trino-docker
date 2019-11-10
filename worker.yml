@@ -8,8 +8,9 @@ services:
       dockerfile: Dockerfile
       args:
         - presto_version=$PRESTO_VERSION
-        - aws_access_key=$AWS_ACCESS_KEY_ID
-        - aws_secret_key=$AWS_SECRET_ACCESS_KEY
-        - is_coordinator=false
-        - iceberg_dir=$ICEBERG_DIR
-    image: presto-worker
+    image: presto-server
+    environment:
+      IS_COORDINATOR: "false"
+      AWS_ACCESS_KEY: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_KEY: $AWS_SECRET_ACCESS_KEY
+      ICEBERG_DIR: $ICEBERG_DIR
