@@ -29,8 +29,8 @@ COPY hive-site.template.xml /opt/hive/conf/.
 COPY hive-site.s3-template.xml /opt/hive/conf/.
 COPY config.sh /opt/hive/.
 
-ENV AWS_ACCESS_KEY=""
-ENV AWS_SECRET_KEY=""
+ENV AWS_ACCESS_KEY_ID=""
+ENV AWS_SECRET_ACCESS_KEY=""
 
 CMD /opt/hive/config.sh && dockerize -wait tcp://hms-db:3306 -timeout 5m && \
     mysql -h hms-db -e "create database if not exists hms;" && \

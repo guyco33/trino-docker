@@ -23,21 +23,21 @@ services:
     depends_on:
       - hms-db
     environment:
-      AWS_ACCESS_KEY: $AWS_ACCESS_KEY_ID
-      AWS_SECRET_KEY: $AWS_SECRET_ACCESS_KEY
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
 
   coordinator:
     build:
       context: server
       dockerfile: Dockerfile
       args:
-        - presto_version=$PRESTO_VERSION
+        - presto_version=${PRESTO_VERSION}
     image: presto-server:${PRESTO_VERSION}
     ports:
       - "8080:8080"
     environment:
       IS_COORDINATOR: "true"
-      COORDINATOR_IS_WORKER: $COORDINATOR_IS_WORKER
-      AWS_ACCESS_KEY: $AWS_ACCESS_KEY_ID
-      AWS_SECRET_KEY: $AWS_SECRET_ACCESS_KEY
-      ICEBERG_DIR: $ICEBERG_DIR
+      COORDINATOR_IS_WORKER: ${COORDINATOR_IS_WORKER}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      ICEBERG_DIR: ${ICEBERG_DIR}

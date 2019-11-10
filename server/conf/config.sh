@@ -2,9 +2,9 @@
 
 function set_s3_accees_key {
     file_name=$1
-    if [[ -n "$AWS_ACCESS_KEY" ]]
+    if [[ -n "${AWS_ACCESS_KEY_ID}" ]]
     then
-        sed -i -e "s|%AWS_ACCESS_KEY%|${AWS_ACCESS_KEY}|g" -e "s|%AWS_SECRET_KEY%|${AWS_SECRET_KEY}|g" ${file_name}
+        sed -i -e "s|%AWS_ACCESS_KEY%|${AWS_ACCESS_KEY_ID}|g" -e "s|%AWS_SECRET_KEY%|${AWS_SECRET_ACCESS_KEY}|g" ${file_name}
     else
         sed -i -e "s|hive.s3.aws-access-key=%AWS_ACCESS_KEY%||g" -e "s|hive.s3.aws-secret-key=%AWS_SECRET_KEY%||g" ${file_name}
     fi

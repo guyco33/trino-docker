@@ -26,8 +26,8 @@ COPY conf/config.sh /opt/presto/.
 
 # TODO: mount /user/hive/warehouse/ to s3
 
-ENV AWS_ACCESS_KEY=""
-ENV AWS_SECRET_KEY=""
+ENV AWS_ACCESS_KEY_ID=""
+ENV AWS_SECRET_ACCESS_KEY=""
 ENV ICEBERG_DIR=""
 
 CMD /opt/presto/config.sh && /opt/presto/bin/launcher start && sleep 30 && tail -f /data/presto/var/log/launcher.log
