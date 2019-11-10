@@ -33,22 +33,15 @@ ENV HADOOP_CLASSPATH /opt/hadoop/share/hadoop/tools/lib/*
 
 RUN cd /opt/hive/lib && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar
 
-ARG aws_access_key
-ARG aws_secret_key
 COPY hive-site.template.xml /opt/hive/conf/.
 COPY hive-site.s3-template.xml /opt/hive/conf/.
-RUN if [[ -z "$aws_access_key" ]]; \
-    then cp /opt/hive/conf/hive-site.template.xml /opt/hive/conf/hive-site.xml;  \
-    else cp /opt/hive/conf/hive-site.s3-template.xml /opt/hive/conf/hive-site.xml;  \
-        sed -i \
-        -e "s|%AWS_ACCESS_KEY%|${aws_access_key}|g"  \
-        -e "s|%AWS_SECRET_KEY%|${aws_secret_key}|g" \
-        /opt/hive/conf/hive-site.xml; \
-    fi
+COPY config.sh /opt/hive/.
+
+ENV AWS_ACCESS_KEY=""
+ENV AWS_SECRET_KEY=""
 
 RUN yum -y install which
-
-CMD dockerize -wait tcp://hms-db:3306 -timeout 5m && \
+CMD /opt/hive/config.sh && dockerize -wait tcp://hms-db:3306 -timeout 5m && \
     mysql -h hms-db -e "create database if not exists hms;" && \
     v=`mysql -sN -h hms-db hms -e "SELECT SCHEMA_VERSION FROM VERSION"`; EXIT_CODE=$? && echo $EXIT_CODE && \
     if [[ $EXIT_CODE -ne 0 ]]; then cd /opt/hive/scripts/metastore/upgrade/mysql/ && mysql -h hms-db hms <hive-schema-2.3.0.mysql.sql; fi && \
