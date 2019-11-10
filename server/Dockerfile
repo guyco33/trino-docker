@@ -37,11 +37,14 @@ RUN sed -i \
     -e "s|%COORDINATOR%|${is_coordinator}|g"  \
     /opt/presto/etc/config.properties
 
-RUN if [[ $is_coordinator == 'true' ]]; \
+RUN echo >>/opt/presto/etc/config.properties; \
+    if [[ $is_coordinator == 'true' ]]; \
     then \
-        echo >>/opt/presto/etc/config.properties; \
+        echo "discovery.uri=http://localhost:8080" >>/opt/presto/etc/config.properties; \
         echo "discovery-server.enabled=true" >>/opt/presto/etc/config.properties; \
         echo "node-scheduler.include-coordinator=$is_worker" >>/opt/presto/etc/config.properties; \
+    else \
+        echo "discovery.uri=http://coordinator:8080" >>/opt/presto/etc/config.properties; \
     fi
 
 ARG iceberg_dir
@@ -59,4 +62,4 @@ RUN if [[ -z "$iceberg_dir" ]]; \
         fi; \
     fi
 
-CMD /opt/presto/bin/launcher start && sleep 30 && tail -f /data/presto/var/log/server.log
+CMD /opt/presto/bin/launcher start && sleep 30 && tail -f /data/presto/var/log/launcher.log
