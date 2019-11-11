@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: presto-coordinator
+  name: presto-coordinator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: presto-coordinator
+  template:
+    metadata:
+      labels:
+        app: presto-coordinator
+    spec:
+      containers:
+      - image: presto-server:324
+        name: presto-coordinator
+        ports:
+        - containerPort: 8080
+        env:
+        - name: IS_COORDINATOR
+          value: "true"
+        - name: COORDINATOR_IS_WORKER
+          value: "true"
+        envFrom:
+        - configMapRef:
+            name: presto-config
+        - secretRef:
+            name: presto-secrets
+      restartPolicy: Always

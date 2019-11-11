@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hms-thrift
+  name: hms-thrift
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hms-thrift
+  template:
+    metadata:
+      labels:
+        app: hms-thrift
+    spec:
+      containers:
+      - image: hms-thrift:3.1.0
+        name: hms-thrift
+        ports:
+        - containerPort: 9083
+        envFrom:
+        - secretRef:
+            name: presto-secrets
+      restartPolicy: Always

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hms-thrift
+  labels:
+    app: hms-thrift
+spec:
+  ports:
+  - name: "9083"
+    port: 9083
+    targetPort: 9083
+  selector:
+    app: hms-thrift
