@@ -2,7 +2,7 @@ version: '3'
 
 services:
 
-  worker:
+  presto-worker:
     build:
       context: server
       dockerfile: Dockerfile
