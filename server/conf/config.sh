@@ -21,12 +21,12 @@ else
     cp /opt/presto/etc/config-worker.properties /opt/presto/etc/config.properties
 fi
 
-cp /opt/presto/etc/catalog/hive.template.properties /opt/presto/etc/catalog/hive.properties
+cp /opt/presto/etc/hive.template.properties /opt/presto/etc/catalog/hive.properties
 set_s3_accees_key /opt/presto/etc/catalog/hive.properties
 
 if [[ -n "$ICEBERG_DIR" ]]
 then
-    cp /opt/presto/etc/catalog/iceberg.template.properties /opt/presto/etc/catalog/iceberg.properties
+    cp /opt/presto/etc/iceberg.template.properties /opt/presto/etc/catalog/iceberg.properties
     sed -i -e "s|%ICEBERG_DIR%|${ICEBERG_DIR}|g" /opt/presto/etc/catalog/iceberg.properties
     set_s3_accees_key /opt/presto/etc/catalog/iceberg.properties
 else
