@@ -11,9 +11,10 @@ RUN yum -y -q install java-11-openjdk-devel
 ENV JAVA_HOME /usr/lib/jvm/java-11
 
 ARG presto_version
-RUN wget -c https://repo1.maven.org/maven2/io/prestosql/presto-server/$presto_version/presto-server-$presto_version.tar.gz
+COPY conf/config.sh presto-server-${presto_version}.tar.gz* /tmp/
+RUN if [[ ! -f /tmp/presto-server-${presto_version}.tar.gz ]]; then wget -P /tmp/ -c https://repo1.maven.org/maven2/io/prestosql/presto-server/${presto_version}/presto-server-${presto_version}.tar.gz; fi
 
-RUN tar xvzf presto-server-$presto_version.tar.gz && mv presto-server-$presto_version /opt/presto
+RUN cd /tmp/ && tar xvzf presto-server-${presto_version}.tar.gz && mv presto-server-${presto_version} /opt/presto
 
 RUN yum -q clean all && rm -rf /var/cache/yum && rm -rf /tmp/* /var/tmp/*
 

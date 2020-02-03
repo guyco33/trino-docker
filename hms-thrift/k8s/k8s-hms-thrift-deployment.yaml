@@ -15,7 +15,7 @@ spec:
         app: hms-thrift
     spec:
       containers:
-      - image: hms-thrift:3.1.0
+      - image: gettlabs/hms-thrift:3.1.0
         name: hms-thrift
         ports:
         - containerPort: 9083
@@ -23,3 +23,5 @@ spec:
         - secretRef:
             name: presto-secrets
       restartPolicy: Always
+      imagePullSecrets:
+        - name: gettlabsdocker-v2

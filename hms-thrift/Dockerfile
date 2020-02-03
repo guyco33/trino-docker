@@ -25,15 +25,19 @@ ENV HADOOP_CLASSPATH /opt/hadoop/share/hadoop/tools/lib/*
 
 RUN cd /opt/hive/lib && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar
 
-COPY hive-site.template.xml /opt/hive/conf/.
-COPY hive-site.s3-template.xml /opt/hive/conf/.
-COPY config.sh /opt/hive/.
+ADD conf /opt/hive/conf
 
 ENV AWS_ACCESS_KEY_ID=""
 ENV AWS_SECRET_ACCESS_KEY=""
+ENV HMS_DB_HOST="hms-db"
+ENV HMS_DB_PORT=3306
+ENV HMS_DB_NAME="hms"
+ENV HMS_DB_USER="root"
+ENV HMS_DB_PASSWORD=""
 
-CMD /opt/hive/config.sh && dockerize -wait tcp://hms-db:3306 -timeout 5m && \
-    mysql -h hms-db -e "create database if not exists hms;" && \
-    v=`mysql -sN -h hms-db hms -e "SELECT SCHEMA_VERSION FROM VERSION"`; EXIT_CODE=$? && echo $EXIT_CODE && \
-    if [[ $EXIT_CODE -ne 0 ]]; then mysql -h hms-db hms </opt/hive/scripts/metastore/upgrade/mysql/hive-schema-3.1.0.mysql.sql; fi && \
-    /opt/hive/bin/hive --hiveconf javax.jdo.option.ConnectionPassword= --service metastore
+CMD /opt/hive/conf/config.sh && dockerize -wait tcp://${HMS_DB_HOST}:${HMS_DB_PORT} -timeout 5m && \
+    if [[ -n "${HMS_DB_PASSWORD}" ]]; then credentials="-P ${HMS_DB_PORT} -u ${HMS_DB_USER} -p${HMS_DB_PASSWORD}"; fi && \
+    mysql -h ${HMS_DB_HOST} ${credentials:-} -e "create database if not exists \`${HMS_DB_NAME}\`;" && \
+    v=`mysql -sN -h ${HMS_DB_HOST} ${credentials:-} ${HMS_DB_NAME} -e "SELECT SCHEMA_VERSION FROM VERSION"`; EXIT_CODE=$? && echo "$v $EXIT_CODE" && \
+    if [[ $EXIT_CODE -ne 0 ]]; then mysql -h ${HMS_DB_HOST} ${credentials:-} ${HMS_DB_NAME} </opt/hive/scripts/metastore/upgrade/mysql/hive-schema-3.1.0.mysql.sql; fi && \
+    /opt/hive/bin/hive --hiveconf javax.jdo.option.ConnectionPassword=${HMS_DB_PASSWORD} --service metastore

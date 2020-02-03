@@ -2,29 +2,34 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: presto-worker
-  name: presto-worker
+    app: presto-coordinator
+  name: presto-coordinator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: presto-worker
+      app: presto-coordinator
   template:
     metadata:
       labels:
-        app: presto-worker
+        app: presto-coordinator
     spec:
       containers:
-      - image: presto-server:324
-        name: presto-worker
+      - image: gettlabs/presto-server:325
+        name: presto-coordinator
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:
         - name: IS_COORDINATOR
-          value: "false"
+          value: "true"
+        - name: COORDINATOR_IS_WORKER
+          value: "true"
         envFrom:
         - configMapRef:
             name: presto-config
         - secretRef:
             name: presto-secrets
       restartPolicy: Always
+      imagePullSecrets:
+        - name: gettlabsdocker-v2

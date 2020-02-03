@@ -25,7 +25,11 @@ services:
     environment:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-
+      HMS_DB_HOST: ${HMS_DB_HOST:-hms-db}
+      HMS_DB_PORT: ${HMS_DB_PORT:-3306}
+      HMS_DB_NAME: ${HMS_DB_NAME:-hms}
+      HMS_DB_USER: ${HMS_DB_USER:-root}
+      HMS_DB_PASSWORD: ${HMS_DB_PASSWORD}
   presto-coordinator:
     build:
       context: server

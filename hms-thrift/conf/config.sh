@@ -7,3 +7,10 @@ then
 else
     cp /opt/hive/conf/hive-site.template.xml /opt/hive/conf/hive-site.xml
 fi
+
+sed -i  \
+    -e "s|%HMS_DB_HOST%|${HMS_DB_HOST}|g"  \
+    -e "s|%HMS_DB_PORT%|${HMS_DB_PORT}|g" \
+    -e "s|%HMS_DB_NAME%|${HMS_DB_NAME}|g" \
+    -e "s|%HMS_DB_USER%|${HMS_DB_USER}|g" \
+    /opt/hive/conf/hive-site.xml
