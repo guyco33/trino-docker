@@ -7,7 +7,7 @@ services:
       context: server
       dockerfile: Dockerfile
       args:
-        - presto_version=$PRESTO_VERSION
+        - PRESTO_VERSION=${PRESTO_VERSION}
     image: presto-server:${PRESTO_VERSION}
     environment:
       IS_COORDINATOR: "false"

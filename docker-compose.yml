@@ -17,7 +17,11 @@ services:
     build:
       context: hms-thrift
       dockerfile: Dockerfile
-    image: hms-thrift:3.1.0
+      args:
+        - JAVA_VERSION=${JAVA_VERSION:-1.8.0}
+        - HADOOP_VERSION=${HADOOP_VERSION}
+        - HIVE_VERSION=${HIVE_VERSION}
+    image: hms-thrift:${HIVE_VERSION}
     ports:
       - "9083:9083"
     depends_on:
@@ -35,7 +39,8 @@ services:
       context: server
       dockerfile: Dockerfile
       args:
-        - presto_version=${PRESTO_VERSION}
+        - JAVA_VERSION=${JAVA_VERSION:-11}
+        - PRESTO_VERSION=${PRESTO_VERSION}
     image: presto-server:${PRESTO_VERSION}
     ports:
       - "8080:8080"
