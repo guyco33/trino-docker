@@ -21,5 +21,13 @@
         <name>hive.metastore.connect.retries</name>
         <value>15</value>
     </property>
+    <propery>
+        <name>hive.users.in.admin.role</name>
+        <value>guyc</value>
+    </propery>
+
+    <!--s3 credentials-->
+
+    <!--gcs credentials-->
 
 </configuration>

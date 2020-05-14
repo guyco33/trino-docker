@@ -12,7 +12,7 @@ RUN yum -y -q install java-${JAVA_VERSION}-openjdk
 ENV JAVA_HOME /usr/lib/jvm/jre
 
 ARG PRESTO_VERSION
-COPY conf/config.sh presto-server-${PRESTO_VERSION}.tar.gz* /tmp/
+COPY for_conditional_copy presto-server-${PRESTO_VERSION}.tar.gz* /tmp/
 RUN if [[ ! -f /tmp/presto-server-${PRESTO_VERSION}.tar.gz ]]; then wget -P /tmp/ -c https://repo1.maven.org/maven2/io/prestosql/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz; fi
 
 RUN cd /tmp/ && tar xvzf presto-server-${PRESTO_VERSION}.tar.gz && mv presto-server-${PRESTO_VERSION} /opt/presto
@@ -27,9 +27,5 @@ COPY conf/default /opt/presto/.
 COPY conf/config.sh /opt/presto/.
 
 # TODO: mount /user/hive/warehouse/ to s3
-
-ENV AWS_ACCESS_KEY_ID=""
-ENV AWS_SECRET_ACCESS_KEY=""
-ENV ICEBERG_DIR=""
 
 CMD /opt/presto/config.sh && /opt/presto/bin/launcher start && sleep 30 && tail -f /data/presto/var/log/launcher.log

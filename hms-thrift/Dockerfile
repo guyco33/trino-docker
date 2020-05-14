@@ -30,14 +30,6 @@ RUN cd /opt/hive/lib && wget https://repo1.maven.org/maven2/mysql/mysql-connecto
 
 ADD conf /opt/hive/conf
 
-ENV AWS_ACCESS_KEY_ID=""
-ENV AWS_SECRET_ACCESS_KEY=""
-ENV HMS_DB_HOST="hms-db"
-ENV HMS_DB_PORT=3306
-ENV HMS_DB_NAME="hms"
-ENV HMS_DB_USER="root"
-ENV HMS_DB_PASSWORD=""
-
 RUN yum -y install which
 CMD /opt/hive/conf/config.sh && dockerize -wait tcp://${HMS_DB_HOST}:${HMS_DB_PORT} -timeout 5m && \
     if [[ -n "${HMS_DB_PASSWORD}" ]]; then credentials="-P ${HMS_DB_PORT} -u ${HMS_DB_USER} -p${HMS_DB_PASSWORD}"; fi && \

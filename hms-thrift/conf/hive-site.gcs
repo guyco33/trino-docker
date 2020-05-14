@@ -1,0 +1,15 @@
+
+    <property>
+        <name>fs.gs.auth.service.account.email</name>
+        <value>%GCS_ACCOUNT_EMAIL%</value>
+    </property>
+
+    <property>
+        <name>fs.gs.auth.service.account.private.key.id</name>
+        <value>%GCS_PRIVATE_KEY_ID%</value>
+    </property>
+
+    <property>
+        <name>fs.gs.auth.service.account.private.key</name>
+        <value>%GCS_PRIVATE_KEY%</value>
+    </property>

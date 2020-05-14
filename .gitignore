@@ -1,5 +1,5 @@
 *.env
-.secrets.*
+server/credentials/s3.properties
 .idea
 */lib
 **/etc/kinesis
