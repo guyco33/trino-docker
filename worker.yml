@@ -20,3 +20,7 @@ services:
       - GCS_PROJECT_ID=${GCS_PROJECT_ID}
       - GCS_CLIENT_ID=${GCS_CLIENT_ID}
       - ICEBERG_DIR=${ICEBERG_DIR}
+      - HMS_JDBC_URL=jdbc:mysql://${HMS_DB_HOST-hms-db}:${HMS_DB_PORT-3306}?zeroDateTimeBehavior=convertToNull&useSSL=false
+      - HMS_DB_PORT=${HMS_DB_PORT:-3306}
+      - HMS_DB_USER=${HMS_DB_USER:-root}
+      - HMS_DB_PASSWORD=${HMS_DB_PASSWORD:-}

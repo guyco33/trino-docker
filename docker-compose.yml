@@ -54,6 +54,9 @@ services:
       - COORDINATOR_IS_WORKER=${COORDINATOR_IS_WORKER}
       - HMS_ADDRESS=${HMS_ADDRESS:-hms-thrift}
       - HMS_THRIFT_PORT=${HMS_THRIFT_PORT:-9083}
+      - HMS_JDBC_URL=jdbc:mysql://${HMS_DB_HOST-hms-db}:${HMS_DB_PORT-3306}?zeroDateTimeBehavior=convertToNull&useSSL=false
+      - HMS_DB_USER=${HMS_DB_USER:-root}
+      - HMS_DB_PASSWORD=${HMS_DB_PASSWORD:-}
       - HIVE_SECURITY=${HIVE_SECURITY:-legacy}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}

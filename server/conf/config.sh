@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-function set_s3_accees_key {
-    file_name=$1
-    if [[ -n "${AWS_ACCESS_KEY_ID}" ]]
-    then
-        sed -i -e "s|%AWS_ACCESS_KEY%|${AWS_ACCESS_KEY_ID}|g" -e "s|%AWS_SECRET_KEY%|${AWS_SECRET_ACCESS_KEY}|g" ${file_name}
-    else
-        sed -i -e "/%AWS_ACCESS_KEY%/d" -e "/%AWS_SECRET_KEY%/d" ${file_name}
-    fi
-}
+#function set_s3_accees_key {
+#    file_name=$1
+#    if [[ -n "${AWS_ACCESS_KEY_ID}" ]]
+#    then
+#        sed -i -e "s|%AWS_ACCESS_KEY%|${AWS_ACCESS_KEY_ID}|g" -e "s|%AWS_SECRET_KEY%|${AWS_SECRET_ACCESS_KEY}|g" ${file_name}
+#    else
+#        sed -i -e "/%AWS_ACCESS_KEY%/d" -e "/%AWS_SECRET_KEY%/d" ${file_name}
+#    fi
+#}
 
 function set_gcs_credentials {
     file_name=$1
@@ -52,14 +52,14 @@ then
     echo "hive.allow-drop-column=true" >>/opt/presto/etc/catalog/hive.properties
     echo "hive.allow-rename-column=true" >>/opt/presto/etc/catalog/hive.properties
 fi
-set_s3_accees_key /opt/presto/etc/catalog/hive.properties
+#set_s3_accees_key /opt/presto/etc/catalog/hive.properties
 set_gcs_credentials /opt/presto/etc/catalog/hive.properties
 
 if [[ -n "${ICEBERG_DIR}" ]]
 then
     cp /opt/presto/etc/iceberg.template.properties /opt/presto/etc/catalog/iceberg.properties
     sed -i -e "s|%ICEBERG_DIR%|${ICEBERG_DIR}|g" /opt/presto/etc/catalog/iceberg.properties
-    set_s3_accees_key /opt/presto/etc/catalog/iceberg.properties
+#    set_s3_accees_key /opt/presto/etc/catalog/iceberg.properties
 else
     rm -f /opt/presto/etc/catalog/iceberg.properties
 fi
@@ -72,5 +72,5 @@ if [[ -n "${KINESIS_DIR}" ]]
 then
     cp /opt/presto/etc/kinesis.template.properties /opt/presto/etc/catalog/kinesis.properties
     sed -i -e "s|%KINESIS_DIR%|${KINESIS_DIR}|g" /opt/presto/etc/catalog/kinesis.properties
-    set_s3_accees_key /opt/presto/etc/catalog/kinesis.properties
+#    set_s3_accees_key /opt/presto/etc/catalog/kinesis.properties
 fi
