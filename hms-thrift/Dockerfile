@@ -26,6 +26,10 @@ RUN yum -q clean all && rm -rf /var/cache/yum && rm -rf /tmp/* /var/tmp/*
 ENV HADOOP_HOME /opt/hadoop
 ENV HADOOP_CLASSPATH /opt/hadoop/share/hadoop/tools/lib/*
 
+ARG GCS_CONNECTOR_VERSION
+RUN wget --no-check-certificate https://repo1.maven.org/maven2/com/google/cloud/bigdataoss/gcs-connector/${GCS_CONNECTOR_VERSION}/gcs-connector-${GCS_CONNECTOR_VERSION}.jar \
+    && mkdir -p /opt/hive/auxlib && mv gcs-connector-${GCS_CONNECTOR_VERSION}.jar /opt/hive/auxlib/
+
 RUN cd /opt/hive/lib && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar
 
 ADD conf /opt/hive/conf

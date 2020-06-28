@@ -21,10 +21,10 @@
         <name>hive.metastore.connect.retries</name>
         <value>15</value>
     </property>
-    <propery>
-        <name>hive.users.in.admin.role</name>
-        <value>guyc</value>
-    </propery>
+<!--    <property>-->
+<!--        <name>hive.users.in.admin.role</name>-->
+<!--        <value>guyc</value>-->
+<!--    </property>-->
 
     <!--s3 credentials-->
 

@@ -21,6 +21,7 @@ services:
         - JAVA_VERSION=${JAVA_VERSION:-1.8.0}
         - HADOOP_VERSION=${HADOOP_VERSION}
         - HIVE_VERSION=${HIVE_VERSION}
+        - GCS_CONNECTOR_VERSION=${GCS_CONNECTOR_VERSION}
     image: hms-thrift:${HIVE_VERSION}
     ports:
       - "9083:9083"
@@ -51,6 +52,8 @@ services:
     environment:
       - IS_COORDINATOR=true
       - COORDINATOR_IS_WORKER=${COORDINATOR_IS_WORKER}
+      - HMS_ADDRESS=${HMS_ADDRESS:-hms-thrift}
+      - HMS_THRIFT_PORT=${HMS_THRIFT_PORT:-9083}
       - HIVE_SECURITY=${HIVE_SECURITY:-legacy}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}

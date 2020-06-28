@@ -13,10 +13,15 @@ if [[ -n "${GCS_PRIVATE_KEY_ID}" ]]
 then
     sed -i  -e "s|%GCS_ACCOUNT_EMAIL%|${GCS_ACCOUNT_EMAIL}|g" \
             -e "s|%GCS_PRIVATE_KEY_ID%|${GCS_PRIVATE_KEY_ID}|g" \
-            -e "s|%GCS_PRIVATE_KEY%|${GCS_PRIVATE_KEY}|g" \
+            -e "s|%GCS_PRIVATE_KEY%|$(echo $GCS_PRIVATE_KEY | sed 's/\\n/\\\\n/g')|g" \
             /opt/hive/conf/hive-site.gcs
     sed -i  -e "s|<\!--gcs credentials-->|$(tr -d '\n' < /opt/hive/conf/hive-site.gcs)|g" \
             /opt/hive/conf/hive-site.xml
+    yes | cp /opt/hive/conf/core-site-template.xml /opt/hadoop/etc/hadoop/core-site.xml
+    sed -i  -e "s|%GCS_ACCOUNT_EMAIL%|${GCS_ACCOUNT_EMAIL}|g" \
+            -e "s|%GCS_PRIVATE_KEY_ID%|${GCS_PRIVATE_KEY_ID}|g" \
+            -e "s|%GCS_PRIVATE_KEY%|$(echo $GCS_PRIVATE_KEY | sed 's/\\n/\\\\n/g')|g" \
+            /opt/hadoop/etc/hadoop/core-site.xml
 fi
 
 sed -i  \

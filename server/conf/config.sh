@@ -14,10 +14,11 @@ function set_gcs_credentials {
     file_name=$1
     if [[ -n "${GCS_PRIVATE_KEY_ID}" ]]
     then
+        cp /opt/presto/etc/gcs_keyfile.template.json /opt/presto/etc/gcs_keyfile.json
         sed -i  -e "s|%GCS_ACCOUNT_EMAIL%|${GCS_ACCOUNT_EMAIL}|g" \
                 -e "s|%ESCAPED_GCS_ACCOUNT_EMAIL%|$(echo $GCS_ACCOUNT_EMAIL | sed 's/@/%40/')|g" \
                 -e "s|%GCS_PRIVATE_KEY_ID%|${GCS_PRIVATE_KEY_ID}|g" \
-                -e "s|%GCS_PRIVATE_KEY%|${GCS_PRIVATE_KEY}|g" \
+                -e "s|%GCS_PRIVATE_KEY%|$(echo $GCS_PRIVATE_KEY | sed 's/\\n/\\\\n/g')|g" \
                 -e "s|%GCS_PROJECT_ID%|${GCS_PROJECT_ID}|g" \
                 -e "s|%GCS_CLIENT_ID%|${GCS_CLIENT_ID}|g" \
                 /opt/presto/etc/gcs_keyfile.json
@@ -39,7 +40,10 @@ fi
 
 cp /opt/presto/etc/hive.template.properties /opt/presto/etc/catalog/hive.properties
 
-sed -i -e "s|%HIVE_SECURITY%|${HIVE_SECURITY}|g" /opt/presto/etc/catalog/hive.properties
+sed -i -e "s|%HIVE_SECURITY%|${HIVE_SECURITY}|g" \
+       -e "s|%HMS_ADDRESS%|${HMS_ADDRESS}|g" \
+       -e "s|%HMS_THRIFT_PORT%|${HMS_THRIFT_PORT}|g" \
+        /opt/presto/etc/catalog/hive.properties
 if [[ "${HIVE_SECURITY}" == "legacy" ]]
 then
     echo "hive.allow-drop-table=true" >>/opt/presto/etc/catalog/hive.properties
