@@ -18,7 +18,7 @@ services:
       context: hms-thrift
       dockerfile: Dockerfile
       args:
-        - JAVA_VERSION=${JAVA_VERSION:-1.8.0}
+        - JAVA_VERSION=${JAVA_VERSION:-11}
         - HADOOP_VERSION=${HADOOP_VERSION}
         - HIVE_VERSION=${HIVE_VERSION}
         - GCS_CONNECTOR_VERSION=${GCS_CONNECTOR_VERSION}
@@ -43,6 +43,7 @@ services:
     build:
       context: server
       dockerfile: Dockerfile
+      network: host
       args:
         - JAVA_VERSION=${JAVA_VERSION:-11}
         - PRESTO_VERSION=${PRESTO_VERSION}

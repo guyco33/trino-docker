@@ -1,6 +1,7 @@
-FROM centos:centos7
+FROM centos:centos8
 
 RUN yum -y -q update && yum install -y wget
+RUN yum -y install python3 && alternatives --set python /usr/bin/python3
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -8,7 +9,9 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 ARG JAVA_VERSION
-RUN yum -y -q install java-${JAVA_VERSION}-openjdk
+RUN rpm --import https://www.azul.com/files/0xB1998361219BD9C9.txt
+RUN dnf -y install https://cdn.azul.com/zulu/bin/zulu-repo-1.0.0-1.noarch.rpm
+RUN yum -y install zulu${JAVA_VERSION}-jre
 ENV JAVA_HOME /usr/lib/jvm/jre
 
 ARG PRESTO_VERSION

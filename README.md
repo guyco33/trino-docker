@@ -2,9 +2,10 @@
 
 ##### Create `.env` file in the project root directory:
 ```
-COMPOSE_PROJECT_NAME=presto
-PRESTO_VERSION=324
+PRESTO_VERSION=346
 COORDINATOR_IS_WORKER=true
+HADOOP_VERSION=3.1.4
+HIVE_VERSION=3.1.2
 ```
 
 ##### Optionaly add AWS keys to access s3 bucket 
