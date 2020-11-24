@@ -3,40 +3,41 @@ FROM centos:centos8
 RUN yum -y -q update && yum install -y wget
 
 ENV DOCKERIZE_VERSION v0.6.1
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+RUN wget -P /tmp --no-check-certificate https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+    tar xzf /tmp/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz --directory /usr/local/bin
 
 ARG JAVA_VERSION
-RUN rpm --import https://www.azul.com/files/0xB1998361219BD9C9.txt
-RUN dnf -y install https://cdn.azul.com/zulu/bin/zulu-repo-1.0.0-1.noarch.rpm
-RUN yum -y install zulu${JAVA_VERSION}-jre
+RUN rpm --import https://www.azul.com/files/0xB1998361219BD9C9.txt && \
+    dnf -y install https://cdn.azul.com/zulu/bin/zulu-repo-1.0.0-1.noarch.rpm && \
+    yum -y install zulu${JAVA_VERSION}-jre
 ENV JAVA_HOME /usr/lib/jvm/jre
 
-RUN rpm -Uvh https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm && yum -y -q install mysql
+RUN rpm -Uvh https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm && \
+    yum -y -q install mysql
 
 ARG HADOOP_VERSION
-RUN cd /tmp && wget http://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz && \
-    tar xvzf hadoop-${HADOOP_VERSION}.tar.gz && mv hadoop-${HADOOP_VERSION} /opt/hadoop
-
 ARG HIVE_VERSION
-RUN cd /tmp && wget https://apache.mivzakim.net/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz && \
-    tar xvzf apache-hive-${HIVE_VERSION}-bin.tar.gz && mv apache-hive-${HIVE_VERSION}-bin /opt/hive
+RUN curl -o /tmp/hadoop-${HADOOP_VERSION}.tar.gz --url http://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz
+RUN curl -o /tmp/apache-hive-${HIVE_VERSION}-bin.tar.gz --url https://apache.mivzakim.net/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz
+
+RUN tar xzf /tmp/hadoop-${HADOOP_VERSION}.tar.gz --directory /opt && mv /opt/hadoop-${HADOOP_VERSION} /opt/hadoop
+
+RUN tar xzf /tmp/apache-hive-${HIVE_VERSION}-bin.tar.gz --directory /opt && mv /opt/apache-hive-${HIVE_VERSION}-bin /opt/hive
+
 RUN if [[ ${HIVE_VERSION} == "3.1.2" ]]; then \
     rm /opt/hive/lib/guava-19.0.jar && cp /opt/hadoop/share/hadoop/common/lib/guava-27.0-jre.jar /opt/hive/lib/ ; \
-    wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/1.11.906/aws-java-sdk-core-1.11.906.jar -P /opt/hive/lib/ ; \
+    mkdir -p /opt/hive/auxlib && curl -o /opt/hive/auxlib/aws-java-sdk-core-1.11.906.jar --url https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/1.11.906/aws-java-sdk-core-1.11.906.jar ; \
     fi
+
+ARG GCS_CONNECTOR_VERSION
+RUN mkdir -p /opt/hive/auxlib && curl -o /opt/hive/auxlib/gcs-connector-${GCS_CONNECTOR_VERSION}.jar --url https://repo1.maven.org/maven2/com/google/cloud/bigdataoss/gcs-connector/${GCS_CONNECTOR_VERSION}/gcs-connector-${GCS_CONNECTOR_VERSION}.jar
+
+RUN curl -o /opt/hive/lib/mysql-connector-java-8.0.13.jar --url https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar
 
 RUN yum -q clean all && rm -rf /var/cache/yum && rm -rf /tmp/* /var/tmp/*
 
 ENV HADOOP_HOME /opt/hadoop
 ENV HADOOP_CLASSPATH /opt/hadoop/share/hadoop/tools/lib/*
-
-ARG GCS_CONNECTOR_VERSION
-RUN wget --no-check-certificate https://repo1.maven.org/maven2/com/google/cloud/bigdataoss/gcs-connector/${GCS_CONNECTOR_VERSION}/gcs-connector-${GCS_CONNECTOR_VERSION}.jar \
-    && mkdir -p /opt/hive/auxlib && mv gcs-connector-${GCS_CONNECTOR_VERSION}.jar /opt/hive/auxlib/
-
-RUN cd /opt/hive/lib && wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar
 
 ADD conf /opt/hive/conf
 
