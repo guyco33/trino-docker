@@ -22,6 +22,10 @@ RUN cd /tmp && wget http://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP
 ARG HIVE_VERSION
 RUN cd /tmp && wget https://apache.mivzakim.net/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz && \
     tar xvzf apache-hive-${HIVE_VERSION}-bin.tar.gz && mv apache-hive-${HIVE_VERSION}-bin /opt/hive
+RUN if [[ ${HIVE_VERSION} == "3.1.2" ]]; then \
+    rm /opt/hive/lib/guava-19.0.jar && cp /opt/hadoop/share/hadoop/common/lib/guava-27.0-jre.jar /opt/hive/lib/ ; \
+    wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/1.11.906/aws-java-sdk-core-1.11.906.jar -P /opt/hive/lib/ ; \
+    fi
 
 RUN yum -q clean all && rm -rf /var/cache/yum && rm -rf /tmp/* /var/tmp/*
 
