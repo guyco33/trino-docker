@@ -1,0 +1,38 @@
+{
+  "tableName": "gett-kinesis-qa",
+  "schemaName": "default",
+  "streamName": "gett-kinesis-qa",
+  "message": {
+    "dataFormat": "csv",
+    "fields": [
+      {
+        "name": "event_name",
+        "type": "VARCHAR",
+        "mapping": "0",
+        "comment": "comment",
+        "hidden": "false"
+      },
+      {
+        "name": "event_at",
+        "type": "VARCHAR",
+        "mapping": "1",
+        "comment": "comment",
+        "hidden": "false"
+      },
+      {
+        "name": "env",
+        "type": "VARCHAR",
+        "mapping": "2",
+        "comment": "comment",
+        "hidden": "false"
+      },
+      {
+        "name": "payload",
+        "type": "VARCHAR",
+        "mapping": "3",
+        "comment": "comment",
+        "hidden": "false"
+      }
+    ]
+  }
+}

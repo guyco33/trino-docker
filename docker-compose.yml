@@ -2,6 +2,17 @@ version: '3'
 
 services:
 
+  hms:
+    image: "ghcr.io/trinodb/testing/hive3.1-hive:latest"
+    ports:
+      - "9083:9083"
+    expose:
+      - "9083"
+    restart: always
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
   hms-db:
     image: "mysql:8.0.18"
     ports:
@@ -39,15 +50,15 @@ services:
       - HMS_DB_USER=${HMS_DB_USER:-root}
       - HMS_DB_PASSWORD=${HMS_DB_PASSWORD:-}
 
-  presto-coordinator:
+  trino-coordinator:
     build:
       context: server
       dockerfile: Dockerfile
       network: host
       args:
         - JAVA_VERSION=${JAVA_VERSION:-11}
-        - PRESTO_VERSION=${PRESTO_VERSION}
-    image: presto-server:${PRESTO_VERSION}
+        - TRINO_VERSION=${TRINO_VERSION}
+    image: trino-server:${TRINO_VERSION}
     ports:
       - "8080:8080"
     environment:
@@ -67,3 +78,4 @@ services:
       - GCS_PROJECT_ID=${GCS_PROJECT_ID}
       - GCS_CLIENT_ID=${GCS_CLIENT_ID}
       - ICEBERG_DIR=${ICEBERG_DIR}
+      - KINESIS_DIR=${KINESIS_DIR}

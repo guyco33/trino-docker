@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: presto-coordinator
+  name: trino-coordinator
   labels:
-    app: presto-coordinator
+    app: trino-coordinator
 #  annotations:
 #    kubernetes.io/service-name: '{{ .Release.Name }}'
 #    external-dns.alpha.kubernetes.io/hostname: {{ .Values.Dns }}.
@@ -16,6 +16,6 @@ spec:
     targetPort: 8080
     nodePort: 31972
   selector:
-    app: presto-coordinator
+    app: trino-coordinator
   type: NodePort
 #  type: LoadBalancer

@@ -2,21 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: presto-coordinator
-  name: presto-coordinator
+    app: trino-coordinator
+  name: trino-coordinator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: presto-coordinator
+      app: trino-coordinator
   template:
     metadata:
       labels:
-        app: presto-coordinator
+        app: trino-coordinator
     spec:
       containers:
-      - image: gettlabs/presto-server:325
-        name: presto-coordinator
+      - image: gettlabs/trino-server:351
+        name: trino-coordinator
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -27,9 +27,9 @@ spec:
           value: "true"
         envFrom:
         - configMapRef:
-            name: presto-config
+            name: trino-config
         - secretRef:
-            name: presto-secrets
+            name: trino-secrets
       restartPolicy: Always
       imagePullSecrets:
         - name: gettlabsdocker-v2

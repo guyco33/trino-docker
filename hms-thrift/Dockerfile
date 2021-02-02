@@ -21,7 +21,6 @@ RUN curl -o /tmp/hadoop-${HADOOP_VERSION}.tar.gz --url http://archive.apache.org
 RUN curl -o /tmp/apache-hive-${HIVE_VERSION}-bin.tar.gz --url https://apache.mivzakim.net/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz
 
 RUN tar xzf /tmp/hadoop-${HADOOP_VERSION}.tar.gz --directory /opt && mv /opt/hadoop-${HADOOP_VERSION} /opt/hadoop
-
 RUN tar xzf /tmp/apache-hive-${HIVE_VERSION}-bin.tar.gz --directory /opt && mv /opt/apache-hive-${HIVE_VERSION}-bin /opt/hive
 
 RUN if [[ ${HIVE_VERSION} == "3.1.2" ]]; then \

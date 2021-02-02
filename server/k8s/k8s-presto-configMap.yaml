@@ -3,4 +3,4 @@ data:
   COORDINATOR_IS_WORKER: "true"
 kind: ConfigMap
 metadata:
-  name: presto-config
+  name: trino-config

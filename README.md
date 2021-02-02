@@ -1,8 +1,8 @@
-# presto-docker
+# trino-docker
 
 ##### Create `.env` file in the project root directory:
 ```
-PRESTO_VERSION=346
+TRINO_VERSION=351
 COORDINATOR_IS_WORKER=true
 HADOOP_VERSION=3.1.4
 HIVE_VERSION=3.1.2

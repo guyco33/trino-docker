@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: presto-worker
+  name: trino-worker
   labels:
-    app: presto-worker
+    app: trino-worker
 spec:
   ports:
   - name: http
     port: 8080
     targetPort: 8080
   selector:
-    app: presto-worker
+    app: trino-worker

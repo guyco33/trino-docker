@@ -2,21 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: presto-worker
-  name: presto-worker
+    app: trino-worker
+  name: trino-worker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: presto-worker
+      app: trino-worker
   template:
     metadata:
       labels:
-        app: presto-worker
+        app: trino-worker
     spec:
       containers:
-      - image: gettlabs/presto-server:325
-        name: presto-worker
+      - image: gettlabs/trino-server:351
+        name: trino-worker
         ports:
         - containerPort: 8080
         env:
@@ -24,7 +24,7 @@ spec:
           value: "false"
         envFrom:
         - configMapRef:
-            name: presto-config
+            name: trino-config
         - secretRef:
-            name: presto-secrets
+            name: trino-secrets
       restartPolicy: Always

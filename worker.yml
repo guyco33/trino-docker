@@ -2,13 +2,13 @@ version: '3'
 
 services:
 
-  presto-worker:
+  trino-worker:
     build:
       context: server
       dockerfile: Dockerfile
       args:
-        - PRESTO_VERSION=${PRESTO_VERSION}
-    image: presto-server:${PRESTO_VERSION}
+        - TRINO_VERSION=${TRINO_VERSION}
+    image: trino-server:${TRINO_VERSION}
     environment:
       - IS_COORDINATOR=false
       - HIVE_SECURITY=${HIVE_SECURITY:-legacy}

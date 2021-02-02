@@ -14,21 +14,21 @@ RUN dnf -y install https://cdn.azul.com/zulu/bin/zulu-repo-1.0.0-1.noarch.rpm
 RUN yum -y install zulu${JAVA_VERSION}-jre
 ENV JAVA_HOME /usr/lib/jvm/jre
 
-ARG PRESTO_VERSION
-COPY for_conditional_copy presto-server-${PRESTO_VERSION}.tar.gz* /tmp/
-RUN if [[ ! -f /tmp/presto-server-${PRESTO_VERSION}.tar.gz ]]; then wget -P /tmp/ -c https://repo1.maven.org/maven2/io/prestosql/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz; fi
+ARG TRINO_VERSION
+COPY for_conditional_copy target/trino-server-${TRINO_VERSION}.tar.gz* /tmp/
+RUN if [[ ! -f /tmp/trino-server-${TRINO_VERSION}.tar.gz ]]; then wget -P /tmp/ -c https://repo1.maven.org/maven2/io/trino/trino-server/${TRINO_VERSION}/trino-server-${TRINO_VERSION}.tar.gz; fi
 
-RUN cd /tmp/ && tar xvzf presto-server-${PRESTO_VERSION}.tar.gz && mv presto-server-${PRESTO_VERSION} /opt/presto
+RUN cd /tmp/ && tar xvzf trino-server-${TRINO_VERSION}.tar.gz && mv trino-server-${TRINO_VERSION} /opt/trino
 
 RUN yum -q clean all && rm -rf /var/cache/yum && rm -rf /tmp/* /var/tmp/*
 
-RUN mkdir -p /data/presto
+RUN mkdir -p /data/trino
 
 EXPOSE 8080
 
-COPY conf/default /opt/presto/.
-COPY conf/config.sh /opt/presto/.
+COPY conf/default /opt/trino/.
+COPY conf/config.sh /opt/trino/.
 
 # TODO: mount /user/hive/warehouse/ to s3
 
-CMD /opt/presto/config.sh && /opt/presto/bin/launcher start && sleep 30 && tail -f /data/presto/var/log/launcher.log
+CMD /opt/trino/config.sh && /opt/trino/bin/launcher start && sleep 30 && tail -f /data/trino/var/log/launcher.log
