@@ -1,7 +1,7 @@
 {
-  "tableName": "gett-kinesis-qa",
+  "tableName": "gett-kinesis-dev",
   "schemaName": "default",
-  "streamName": "gett-kinesis-qa",
+  "streamName": "gett-kinesis-dev",
   "message": {
     "dataFormat": "csv",
     "fields": [

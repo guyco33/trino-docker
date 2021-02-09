@@ -1,6 +1,6 @@
 *.env
 server/credentials/s3.properties
-server/target
+server/files/tmp
 .idea
 */lib
 **/etc/kinesis

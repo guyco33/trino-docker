@@ -6,7 +6,6 @@ ENV DOCKERIZE_VERSION v0.6.1
 RUN wget -P /tmp --no-check-certificate https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     tar xzf /tmp/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz --directory /usr/local/bin
 
-ARG JAVA_VERSION
 RUN rpm --import https://www.azul.com/files/0xB1998361219BD9C9.txt && \
     dnf -y install https://cdn.azul.com/zulu/bin/zulu-repo-1.0.0-1.noarch.rpm && \
     yum -y install zulu${JAVA_VERSION}-jre
