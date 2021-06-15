@@ -6,8 +6,9 @@ services:
     image: "ghcr.io/trinodb/testing/hive3.1-hive:latest"
     ports:
       - "9083:9083"
+      - "3306:53306"
     expose:
-      - "9083"
+      - "3306"
     restart: always
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}

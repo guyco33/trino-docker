@@ -1,15 +1,17 @@
-FROM centos:centos8
+#FROM centos:centos8
+FROM azul/zulu-openjdk-centos:11
 
-RUN yum -y -q update && yum install -y wget
+ENV JAVA_HOME /usr/lib/jvm/zulu11
+RUN yum install -y wget
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget -P /tmp --no-check-certificate https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     tar xzf /tmp/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz --directory /usr/local/bin
 
-RUN rpm --import https://www.azul.com/files/0xB1998361219BD9C9.txt && \
-    dnf -y install https://cdn.azul.com/zulu/bin/zulu-repo-1.0.0-1.noarch.rpm && \
-    yum -y install zulu${JAVA_VERSION}-jre
-ENV JAVA_HOME /usr/lib/jvm/jre
+#RUN rpm --import https://www.azul.comdnf -y install/files/0xB1998361219BD9C9.txt && \
+#    dnf -y install https://cdn.azul.com/zulu/bin/zulu-repo-1.0.0-1.noarch.rpm && \
+#    yum -y install zulu11-jre
+#ENV JAVA_HOME /usr/lib/jvm/jre
 
 RUN rpm -Uvh https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm && \
     yum -y -q install mysql

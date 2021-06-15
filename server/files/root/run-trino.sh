@@ -2,6 +2,8 @@
 
 set -xeuo pipefail
 
+/root/setup.sh
+
 set +e
 grep -s -q 'node.id' /opt/trino/etc/node.properties
 NODE_ID_EXISTS=$?

@@ -14,8 +14,8 @@ RUN \
     yum -q clean all && \
     rm -rf /var/cache/yum && \
     rm -rf /tmp/* /var/tmp/* && \
-    mkdir -p /data/trino && \
-    /root/setup.sh
+    mkdir -p /data/trino
+
 
 EXPOSE 8080
 ENV LANG en_US.UTF-8
