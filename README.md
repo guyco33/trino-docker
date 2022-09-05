@@ -15,8 +15,8 @@ AWS_SECRET_ACCESS_KEY=<your secret key>
 ```
 
 ##### Build images:
-- `docker-compose build coordinator hms`
+- `docker-compose build coordinator hms-thrift`
 
 ##### Run containers:
-- `docker-compose up -d coordinator hms`
+- `docker-compose up -d coordinator hms-thrift`
 - (optionally run additional worker) `docker-compose up -d worker`
