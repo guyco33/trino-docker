@@ -2,7 +2,7 @@
 
 ##### Create `.env` file in the project root directory:
 ```
-TRINO_VERSION=352
+TRINO_VERSION=394
 COORDINATOR_IS_WORKER=true
 HADOOP_VERSION=3.1.2
 HIVE_VERSION=3.1.2
@@ -20,4 +20,3 @@ AWS_SECRET_ACCESS_KEY=<your secret key>
 ##### Run containers:
 - `docker-compose up -d coordinator hms`
 - (optionally run additional worker) `docker-compose up -d worker`
-

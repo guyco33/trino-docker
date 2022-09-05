@@ -1,4 +1,4 @@
-version: '3'
+version: "3.9"
 
 services:
 
@@ -30,11 +30,11 @@ services:
       context: hms-thrift
       dockerfile: Dockerfile
       args:
-        - JAVA_VERSION=${JAVA_VERSION:-11}
-        - HADOOP_VERSION=${HADOOP_VERSION}
-        - HIVE_VERSION=${HIVE_VERSION}
-        - GCS_CONNECTOR_VERSION=${GCS_CONNECTOR_VERSION}
-    image: hms-thrift:${HIVE_VERSION}
+        - JAVA_VERSION=${JAVA_VERSION:-17}
+        - HADOOP_VERSION=${HADOOP_VERSION:-3.1.2}
+        - HIVE_VERSION=${HIVE_VERSION:-3.1.2}
+        - GCS_CONNECTOR_VERSION=${GCS_CONNECTOR_VERSION:-hadoop3-latest}
+    image: hms-thrift:${HIVE_VERSION:-3.1.2}
     ports:
       - "9083:9083"
     depends_on:
@@ -50,6 +50,18 @@ services:
       - HMS_DB_NAME=${HMS_DB_NAME:-hms}
       - HMS_DB_USER=${HMS_DB_USER:-root}
       - HMS_DB_PASSWORD=${HMS_DB_PASSWORD:-}
+      - HMS_DEBUG=${DEBUG:-false}
+
+  conn-pg12:
+    image: "postgres:12"
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgresConnector123
+      - POSTGRES_HOST_AUTH_METHOD=trust
 
   coordinator:
     build:
@@ -57,8 +69,9 @@ services:
       dockerfile: Dockerfile
       network: host
       args:
-        - TRINO_VERSION=${TRINO_VERSION}
-    image: trino-server:${TRINO_VERSION}
+        - TRINO_VERSION=${TRINO_VERSION:-394}
+        - JAVA_VERSION=${JAVA_VERSION:-17}
+    image: trino-server:${TRINO_VERSION:-394}
     ports:
       - "8080:8080"
     environment:
@@ -77,16 +90,19 @@ services:
       - GCS_PRIVATE_KEY=${GCS_PRIVATE_KEY}
       - GCS_PROJECT_ID=${GCS_PROJECT_ID}
       - GCS_CLIENT_ID=${GCS_CLIENT_ID}
-      - ICEBERG_DIR=${ICEBERG_DIR}
       - KINESIS_DIR=${KINESIS_DIR}
+      - MASKING_HMAC_KEY=${MASKING_HMAC_KEY}
+      - MASKING_ATTR_MAPPING_DIR=${MASKING_ATTR_MAPPING_DIR}
+      - MASKING_ENCRYPTION_KEY=${MASKING_ENCRYPTION_KEY}
+      - DEBUG=${DEBUG:-false}
 
   worker:
     build:
       context: server
       dockerfile: Dockerfile
       args:
-        - TRINO_VERSION=${TRINO_VERSION}
-    image: trino-server:${TRINO_VERSION}
+        - TRINO_VERSION=${TRINO_VERSION:-394}
+    image: trino-server:${TRINO_VERSION:-394}
     environment:
       - IS_COORDINATOR=false
       - COORDINATOR_IS_WORKER=${COORDINATOR_IS_WORKER}
@@ -103,5 +119,8 @@ services:
       - GCS_PRIVATE_KEY=${GCS_PRIVATE_KEY}
       - GCS_PROJECT_ID=${GCS_PROJECT_ID}
       - GCS_CLIENT_ID=${GCS_CLIENT_ID}
-      - ICEBERG_DIR=${ICEBERG_DIR}
       - KINESIS_DIR=${KINESIS_DIR}
+      - MASKING_HMAC_KEY=${MASKING_HMAC_KEY}
+      - MASKING_ATTR_MAPPING_DIR=${MASKING_ATTR_MAPPING_DIR}
+      - MASKING_ENCRYPTION_KEY=${MASKING_ENCRYPTION_KEY}
+      - DEBUG=${DEBUG:-false}

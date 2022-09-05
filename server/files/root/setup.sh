@@ -26,3 +26,8 @@ then
     echo "hive.allow-rename-column=true" >>/opt/trino/etc/catalog/hive.properties
 fi
 set_gcs_credentials /opt/trino/etc/catalog/hive.properties
+
+if [[ ${DEBUG} == true ]]
+then
+  sed -i -e "s|io.trino=.*$|io.trino=DEBUG|g" /opt/trino/etc/log.properties
+fi
